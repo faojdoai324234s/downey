@@ -48,6 +48,8 @@ func NewCDM(privateKey string, clientID []byte, initData []byte) (CDM, error) {
 	if len(initData) < 32 {
 		return CDM{}, errors.New("initData not long enough")
 	}
+	fmt.Printf("initData sliced 1: %s\n", initData[32:])
+	fmt.Printf("initData sliced 2: %x", initData[32:])
 	if err := proto.Unmarshal(initData[32:], &widevineCencHeader); err != nil {
 		return CDM{}, err
 	}
