@@ -36,14 +36,14 @@ type Key struct {
 
 // Creates a new CDM object with the specified device information.
 func NewCDM(privateKey string, clientID []byte, initData []byte) (CDM, error) {
-	block, _ := pem.Decode([]byte(privateKey))
+	/*block, _ := pem.Decode([]byte(privateKey))
 	if block == nil || block.Type != "RSA PRIVATE KEY" {
 		return CDM{}, errors.New("failed to decode device private key")
 	}
 	keyParsed, err := x509.ParsePKCS1PrivateKey(block.Bytes)
 	if err != nil {
 		return CDM{}, err
-	}
+	}*/
 
 	var widevineCencHeader WidevineCencHeader
 	if len(initData) < 32 {
