@@ -8,7 +8,7 @@ import (
 	"crypto/rsa"
 	"crypto/sha1"
 	"crypto/x509"
-	"encoding/pem"
+	//"encoding/pem"
 	"errors"
 	"fmt"
 	"github.com/aead/cmac"
@@ -69,7 +69,7 @@ func NewCDM(privateKey string, clientID []byte, initData []byte) (CDM, error) {
 	}()
 
 	return CDM{
-		privateKey: keyParsed,
+		privateKey: nil,
 		clientID:   clientID,
 
 		widevineCencHeader: widevineCencHeader,
