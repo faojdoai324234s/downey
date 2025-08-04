@@ -45,7 +45,7 @@ func main() {
 			panic(err)
 		}
 		fmt.Printf("initData 1: %s\n", initData)
-		fmt.Printf("initData 2: %x", initData)
+		fmt.Printf("initData 2: %x\n", initData)
 	}
 	cdm, err := widevine.NewDefaultCDM(initData)
 	if err != nil {
