@@ -49,6 +49,8 @@ func NewCDM(privateKey string, clientID []byte, initData []byte) (CDM, error) {
 	if len(initData) < 32 {
 		return CDM{}, errors.New("initData not long enough")
 	}
+	fmt.Printf("initData full slice: %v\n", initData[:])
+	fmt.Printf("initData full array: %v\n", initData)
 	fmt.Printf("initData sliced 0: %v\n", initData[32:])
 	fmt.Printf("initData sliced 1: %s\n", initData[32:])
 	fmt.Printf("initData sliced 2: %x", initData[32:])
