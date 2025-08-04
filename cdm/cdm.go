@@ -8,8 +8,9 @@ import (
 	"crypto/rsa"
 	"crypto/sha1"
 	"crypto/x509"
-	"encoding/pem"
+	//"encoding/pem"
 	"errors"
+	"fmt"
 	"github.com/aead/cmac"
 	"google.golang.org/protobuf/proto"
 	"lukechampine.com/frand"
@@ -35,19 +36,24 @@ type Key struct {
 
 // Creates a new CDM object with the specified device information.
 func NewCDM(privateKey string, clientID []byte, initData []byte) (CDM, error) {
-	block, _ := pem.Decode([]byte(privateKey))
+	/*block, _ := pem.Decode([]byte(privateKey))
 	if block == nil || block.Type != "RSA PRIVATE KEY" {
 		return CDM{}, errors.New("failed to decode device private key")
 	}
 	keyParsed, err := x509.ParsePKCS1PrivateKey(block.Bytes)
 	if err != nil {
 		return CDM{}, err
-	}
+	}*/
 
 	var widevineCencHeader WidevineCencHeader
 	if len(initData) < 32 {
 		return CDM{}, errors.New("initData not long enough")
 	}
+	fmt.Printf("initData full slice: %v\n", initData[:])
+	fmt.Printf("initData full array: %v\n", initData)
+	fmt.Printf("initData sliced 0: %v\n", initData[32:])
+	fmt.Printf("initData sliced 1: %s\n", initData[32:])
+	fmt.Printf("initData sliced 2: %x", initData[32:])
 	if err := proto.Unmarshal(initData[32:], &widevineCencHeader); err != nil {
 		return CDM{}, err
 	}
@@ -66,7 +72,7 @@ func NewCDM(privateKey string, clientID []byte, initData []byte) (CDM, error) {
 	}()
 
 	return CDM{
-		privateKey: keyParsed,
+		privateKey: nil,
 		clientID:   clientID,
 
 		widevineCencHeader: widevineCencHeader,

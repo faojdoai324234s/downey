@@ -20,7 +20,7 @@ var opts struct {
 }
 
 func init() {
-	widevine.InitConstants()
+	//widevine.InitConstants()
 }
 
 func main() {
@@ -44,6 +44,8 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
+		fmt.Printf("initData 1: %s\n", initData)
+		fmt.Printf("initData 2: %x\n", initData)
 	}
 	cdm, err := widevine.NewDefaultCDM(initData)
 	if err != nil {
