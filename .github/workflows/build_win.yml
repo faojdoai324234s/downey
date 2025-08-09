@@ -21,6 +21,6 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: Windows-artifact
-        path: ${{github.workspace}}/downey.exe
+        path: ${{github.workspace}}/main.exe
         if-no-files-found: ignore
         retention-days: 0
