@@ -10,6 +10,7 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"errors"
+	"fmt"
 	"github.com/aead/cmac"
 	"google.golang.org/protobuf/proto"
 	"lukechampine.com/frand"
@@ -51,6 +52,7 @@ func NewCDM(privateKey string, clientID []byte, initData []byte) (CDM, error) {
 	if err := proto.Unmarshal(initData[32:], &widevineCencHeader); err != nil {
 		return CDM{}, err
 	}
+	fmt.Println("\nWidevine CENC header: %v", widevineCencHeader)
 
 	sessionID := func() (s [32]byte) {
 		c := []byte("ABCDEF0123456789")
@@ -78,26 +80,6 @@ func NewCDM(privateKey string, clientID []byte, initData []byte) (CDM, error) {
 // Creates a new CDM object using the default device configuration.
 func NewDefaultCDM(initData []byte) (CDM, error) {
 	return NewCDM(DefaultPrivateKey, DefaultClientID, initData)
-}
-
-// Sets a device certificate.  This is makes generating the license request
-// more complicated but is supported.  This is usually not necessary for most
-// Widevine applications.
-func (c *CDM) SetServiceCertificate(certData []byte) error {
-	var message SignedMessage
-	if err := proto.Unmarshal(certData, &message); err != nil {
-		return err
-	}
-	if err := proto.Unmarshal(message.Msg, &c.signedDeviceCertificate); err != nil {
-		return err
-	}
-	c.privacyMode = true
-	return nil
-}
-
-func (c *CDM) GetServiceCertificate() *SignedDeviceCertificate {
-	
-	return &c.signedDeviceCertificate
 }
 
 // Generates the license request data.  This is sent to the license server via
@@ -145,6 +127,7 @@ func (c *CDM) GetLicenseRequest() ([]byte, error) {
 	}
 
 	if c.privacyMode {
+		fmt.Println("\nUsing privacy mode.")
 		pad := func(data []byte, blockSize int) []byte {
 			padlen := blockSize - (len(data) % blockSize)
 			if padlen == 0 {
@@ -187,6 +170,7 @@ func (c *CDM) GetLicenseRequest() ([]byte, error) {
 		licenseRequest.Msg.EncryptedClientId.EncryptedClientIdIv = cidIV[:]
 		licenseRequest.Msg.EncryptedClientId.EncryptedPrivacyKey = encryptedCIDKey
 	} else {
+		fmt.Println("\nNot using privacy mode.")
 		licenseRequest.Msg.ClientId = new(ClientIdentification)
 		if err := proto.Unmarshal(c.clientID, licenseRequest.Msg.ClientId); err != nil {
 			return nil, err
@@ -203,6 +187,8 @@ func (c *CDM) GetLicenseRequest() ([]byte, error) {
 			return nil, err
 		}
 	}
+
+	fmt.Println("\nSize of signature: %v bytes.", len(licenseRequest.Signature))
 
 	return proto.Marshal(&licenseRequest)
 }
