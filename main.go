@@ -83,11 +83,5 @@ func main() {
 		panic(err)
 	}
 
-	command := ""
-	for _, key := range keys {
-		if key.Type == widevine.License_KeyContainer_CONTENT {
-			command += "\n" + hex.EncodeToString(key.ID) + ":" + hex.EncodeToString(key.Value)
-		}
-	}
-	fmt.Println("\nDecryption keys: ", command)
+	fmt.Println("\nKeys received.")
 }
