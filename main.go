@@ -4,7 +4,6 @@ import (
 	"github.com/dengskoloper/downey/util"
 	"net/http"
 	"bytes"
-	"encoding/hex"
 	"encoding/base64"
 	"fmt"
 	"io"
@@ -78,7 +77,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	keys, err := cdm.GetLicenseKeys(licenseRequest, licenseResponse)
+	_, err := cdm.GetLicenseKeys(licenseRequest, licenseResponse)
 	if err != nil {
 		panic(err)
 	}
