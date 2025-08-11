@@ -30,6 +30,7 @@ func main() {
 	}
 	var initData []byte
 	if len(opts.InitPSSH) > 0 {
+		fmt.Println("\nUsing user-inputted PSSH.")
 		initData, err = base64.StdEncoding.DecodeString(opts.InitPSSH)
 		if err != nil {
 			panic(err)
