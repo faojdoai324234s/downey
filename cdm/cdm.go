@@ -52,6 +52,7 @@ func NewCDM(privateKey string, clientID []byte, initData []byte) (CDM, error) {
 	if err := proto.Unmarshal(initData[32:], &widevineCencHeader); err != nil {
 		return CDM{}, err
 	}
+	fmt.Println("\nWidevine CENC header: %v", widevineCencHeader)
 
 	sessionID := func() (s [32]byte) {
 		c := []byte("ABCDEF0123456789")
@@ -79,27 +80,6 @@ func NewCDM(privateKey string, clientID []byte, initData []byte) (CDM, error) {
 // Creates a new CDM object using the default device configuration.
 func NewDefaultCDM(initData []byte) (CDM, error) {
 	return NewCDM(DefaultPrivateKey, DefaultClientID, initData)
-}
-
-// Sets a device certificate.  This is makes generating the license request
-// more complicated but is supported.  This is usually not necessary for most
-// Widevine applications.
-func (c *CDM) SetServiceCertificate(certData []byte) error {
-	fmt.Println("\nSetting service certificate.")
-	var message SignedMessage
-	if err := proto.Unmarshal(certData, &message); err != nil {
-		return err
-	}
-	if err := proto.Unmarshal(message.Msg, &c.signedDeviceCertificate); err != nil {
-		return err
-	}
-	c.privacyMode = true
-	return nil
-}
-
-func (c *CDM) GetServiceCertificate() *SignedDeviceCertificate {
-	
-	return &c.signedDeviceCertificate
 }
 
 // Generates the license request data.  This is sent to the license server via
