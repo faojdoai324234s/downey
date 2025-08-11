@@ -10,6 +10,7 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"errors"
+	"fmt"
 	"github.com/aead/cmac"
 	"google.golang.org/protobuf/proto"
 	"lukechampine.com/frand"
@@ -84,6 +85,7 @@ func NewDefaultCDM(initData []byte) (CDM, error) {
 // more complicated but is supported.  This is usually not necessary for most
 // Widevine applications.
 func (c *CDM) SetServiceCertificate(certData []byte) error {
+	fmt.Println("\nSetting service certificate.")
 	var message SignedMessage
 	if err := proto.Unmarshal(certData, &message); err != nil {
 		return err
@@ -145,6 +147,7 @@ func (c *CDM) GetLicenseRequest() ([]byte, error) {
 	}
 
 	if c.privacyMode {
+		fmt.Println("\nUsing privacy mode.")
 		pad := func(data []byte, blockSize int) []byte {
 			padlen := blockSize - (len(data) % blockSize)
 			if padlen == 0 {
@@ -187,6 +190,7 @@ func (c *CDM) GetLicenseRequest() ([]byte, error) {
 		licenseRequest.Msg.EncryptedClientId.EncryptedClientIdIv = cidIV[:]
 		licenseRequest.Msg.EncryptedClientId.EncryptedPrivacyKey = encryptedCIDKey
 	} else {
+		fmt.Println("\nNot using privacy mode.")
 		licenseRequest.Msg.ClientId = new(ClientIdentification)
 		if err := proto.Unmarshal(c.clientID, licenseRequest.Msg.ClientId); err != nil {
 			return nil, err
