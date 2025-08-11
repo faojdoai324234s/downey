@@ -77,7 +77,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	_, err := cdm.GetLicenseKeys(licenseRequest, licenseResponse)
+	_, err = cdm.GetLicenseKeys(licenseRequest, licenseResponse)
 	if err != nil {
 		panic(err)
 	}
