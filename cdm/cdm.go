@@ -188,7 +188,7 @@ func (c *CDM) GetLicenseRequest() ([]byte, error) {
 		}
 	}
 
-	fmt.Println("\nSize of signature: %v", proto.Size(licenseRequest.Signature))
+	fmt.Println("\nSize of signature: %v bytes.", len(licenseRequest.Signature))
 
 	return proto.Marshal(&licenseRequest)
 }
