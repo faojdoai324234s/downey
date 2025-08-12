@@ -183,7 +183,7 @@ func (c *CDM) GetLicenseRequest() ([]byte, error) {
 			return nil, err
 		}
 		hash := sha1.Sum(data)
-		signature := rsa.SignPSS(frand.Reader, c.privateKey, crypto.SHA1, hash[:], &rsa.PSSOptions{SaltLength: rsa.PSSSaltLengthEqualsHash})
+		signature, err := rsa.SignPSS(frand.Reader, c.privateKey, crypto.SHA1, hash[:], &rsa.PSSOptions{SaltLength: rsa.PSSSaltLengthEqualsHash})
 		fmt.Println("\nSize of signature: %v bytes.", len(signature))
 		if licenseRequest.Signature, err = rsa.SignPSS(frand.Reader, c.privateKey, crypto.SHA1, hash[:], &rsa.PSSOptions{SaltLength: rsa.PSSSaltLengthEqualsHash}); err != nil {
 			return nil, err
