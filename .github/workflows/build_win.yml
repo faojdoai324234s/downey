@@ -14,4 +14,8 @@ jobs:
 
     steps:
     - name: Check FIPS
-      run: go tool nm main.fips | grep -E 'sig.FIPSOnly|sig.BoringCrypto|sig.StandardCrypto'
+      run: |
+        echo "Checking FIPS..."
+        go tool nm main.go | grep -E 'sig.FIPSOnly|sig.BoringCrypto|sig.StandardCrypto'
+        echo "Checking FIPS again..."
+        go tool nm main.go | grep FIPS
