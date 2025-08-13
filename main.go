@@ -4,7 +4,6 @@ import (
 	"github.com/dengskoloper/downey/util"
 	"net/http"
 	"bytes"
-	"encoding/hex"
 	"encoding/base64"
 	"fmt"
 	"io"
@@ -30,6 +29,7 @@ func main() {
 	}
 	var initData []byte
 	if len(opts.InitPSSH) > 0 {
+		fmt.Println("\nUsing user-inputted PSSH.")
 		initData, err = base64.StdEncoding.DecodeString(opts.InitPSSH)
 		if err != nil {
 			panic(err)
@@ -77,16 +77,10 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	keys, err := cdm.GetLicenseKeys(licenseRequest, licenseResponse)
+	_, err = cdm.GetLicenseKeys(licenseRequest, licenseResponse)
 	if err != nil {
 		panic(err)
 	}
 
-	command := ""
-	for _, key := range keys {
-		if key.Type == widevine.License_KeyContainer_CONTENT {
-			command += "\n" + hex.EncodeToString(key.ID) + ":" + hex.EncodeToString(key.Value)
-		}
-	}
-	fmt.Println("\nDecryption keys: ", command)
+	fmt.Println("\nKeys received.")
 }

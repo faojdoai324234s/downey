@@ -1,0 +1,21 @@
+name: Check FIPS on Linux
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu 24.04
+
+    steps:
+    - name: Check FIPS
+      run: |
+        echo "Checking FIPS..."
+        go tool nm main.go | grep -E 'sig.FIPSOnly|sig.BoringCrypto|sig.StandardCrypto'
+        echo "Checking FIPS again..."
+        go tool nm main.go | grep FIPS
